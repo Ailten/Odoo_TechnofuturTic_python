@@ -16,6 +16,7 @@ def printScreen():
         str_line = ''
         for x in range(len(RiperMind.cels[y])):
             str_line += RiperMind.cels[y][x]['char'] if RiperMind.cels[y][x]['isFind'] else '#'
+        print(str_line)
 
 
 # generate bomb.
@@ -56,6 +57,11 @@ def countBombsAdj(pos) -> int:
     output += 1 if findInBombs((x  , y+1)) else 0
     return output
 
+# reveal all bombs.
+def revealAllBombs():
+    for b in RiperMind.bombs:
+        RiperMind.cels[b[1]][b[0]]['isFind'] = True
+
 # generateCels.
 def generateCels():
     RiperMind.cels = []
@@ -78,30 +84,39 @@ def generateCels():
             })
 
 # try a pos.
-def tryAPos(pos_try):
-    if findInBombs(pos_try):
+def tryAPos(pos):
+    if findInBombs(pos):
         RiperMind.isLose = True
         return
-    revealACel(pos_try)
-def revealACel(pos):
-    if pos[0] < 0 or pos[0] >= size_map_x:
-        return
-    if pos[1] < 0 or pos[1] >= size_map_y:
-        return
-    cel = RiperMind.cels[pos[1]][pos[0]]
-    if cel['isFind']:
-        return
     RiperMind.cels[pos[1]][pos[0]]['isFInd'] = True
-    if cel['char'] == '.':
-        revealACel((pos[0]+1, pos[1]+1))  # FIXME: recursiv call to hight.
-        revealACel((pos[0]+1, pos[1]  ))
-        revealACel((pos[0]+1, pos[1]-1))
-        revealACel((pos[0]-1, pos[1]+1))
-        revealACel((pos[0]-1, pos[1]  ))
-        revealACel((pos[0]-1, pos[1]-1))
-        revealACel((pos[0]  , pos[1]+1))
-        revealACel((pos[0]  , pos[1]-1))
-    
+    current_wave_reveal = {pos_try}
+    new_wave_reveal = set([])
+    while True:
+        for y in range(len(RiperMind.cels)):
+            for x in range(len(RiperMind.cels[y])):
+                cel = RiperMind.cels[y][x]
+                if cel['isFind']:
+                    continue
+                if (x, y) in current_wave_reveal:
+                    continue
+                if len({e for e in current_wave_reveal if isAdj(e, (x, y)) and RiperMind.cels[e[1]][e[0]]['char'] == '.'}) > 0:
+                    new_wave_reveal |= {(x, y)}
+                    RiperMind.cels[y][x]['isFind'] = True  # TODO: it's not reveal when try work.
+        if len(new_wave_reveal) == 0:
+            break
+            
+def isAdj(posA, posB) -> bool:
+    return abs(posA[0] - posB[0]) <= 1 or abs(posA[1] - posB[1]) <= 1
+
+# is win.
+def isWin() -> bool:
+    for y in range(len(RiperMind.cels)):
+        for x in range(len(RiperMind.cels[y])):
+            c = RiperMind.cels[y][x]
+            if c['char'] != 'O' and not c['isFind']:
+                return False
+    return True
+
 
 
 # execute.
@@ -132,4 +147,14 @@ while True:
     pos_try = (input_x, input_y)
     tryAPos(pos_try)
 
+    if RiperMind.isLose:
+        revealAllBombs()
+        print("you lose !")
+        break
+    if isWin():
+        print("you won !")
+        break
+
     printScreen()
+
+print('end')
