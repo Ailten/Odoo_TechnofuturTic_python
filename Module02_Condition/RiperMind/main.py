@@ -88,25 +88,29 @@ def tryAPos(pos):
     if findInBombs(pos):
         RiperMind.isLose = True
         return
-    RiperMind.cels[pos[1]][pos[0]]['isFInd'] = True
+    RiperMind.cels[pos[1]][pos[0]]['isFind'] = True
     current_wave_reveal = {pos_try}
-    new_wave_reveal = set([])
+    new_wave_reveal = set()
     while True:
         for y in range(len(RiperMind.cels)):
             for x in range(len(RiperMind.cels[y])):
                 cel = RiperMind.cels[y][x]
+                c_pos = (x, y)
                 if cel['isFind']:
                     continue
-                if (x, y) in current_wave_reveal:
+                if c_pos in current_wave_reveal:
                     continue
-                if len({e for e in current_wave_reveal if isAdj(e, (x, y)) and RiperMind.cels[e[1]][e[0]]['char'] == '.'}) > 0:
-                    new_wave_reveal |= {(x, y)}
-                    RiperMind.cels[y][x]['isFind'] = True  # TODO: it's not reveal when try work.
+                is_adj = len({None for e in current_wave_reveal if isAdj(e, c_pos) and RiperMind.cels[e[1]][e[0]]['char'] == '.'}) > 0
+                if is_adj:
+                    new_wave_reveal |= {c_pos}
+                    RiperMind.cels[y][x]['isFind'] = True
+        current_wave_reveal |= new_wave_reveal
         if len(new_wave_reveal) == 0:
             break
+        new_wave_reveal = set()
             
 def isAdj(posA, posB) -> bool:
-    return abs(posA[0] - posB[0]) <= 1 or abs(posA[1] - posB[1]) <= 1
+    return abs(posA[0] - posB[0]) <= 1 and abs(posA[1] - posB[1]) <= 1
 
 # is win.
 def isWin() -> bool:
@@ -136,16 +140,22 @@ while True:
         print("an input enter is not a number !")  # verify number.
         continue
 
+    if input_x == -1 or input_y == -1:
+        print('exit.')
+        break
+
     # verify range.
     if input_x < 0 or input_x >= size_map_x:
         print("input X is out of range !")
         continue
-    if input_y < 0 or input_y >= size_map_x:
+    if input_y < 0 or input_y >= size_map_y:
         print("input Y is out of range !")
         continue
 
     pos_try = (input_x, input_y)
     tryAPos(pos_try)
+
+    printScreen()
 
     if RiperMind.isLose:
         revealAllBombs()
@@ -154,7 +164,5 @@ while True:
     if isWin():
         print("you won !")
         break
-
-    printScreen()
 
 print('end')
