@@ -106,17 +106,17 @@ library = {
     "978-2070419012": ("Les Justes", ["Théâtre", "Politique"])
 }
 
-#input_filter = json.loads('{ "page": 2 }')
+input_filter = json.loads('{ "page": 2 }')
 #input_filter = json.loads('{ "title": "Le" }')
 #input_filter = json.loads('{ "category": "Fantasy" }')
-input_filter = json.loads('{ "category": "Fantasy", "title": "Le" }')
+#input_filter = json.loads('{ "category": "Fantasy", "title": "Le" }')
 
 result = library.copy()
 
 # filter title.
 if 'title' in input_filter:
     search = input_filter['title']
-    result = { k: v for k, v in result.items() if re.search('^'+search, v[0]) != None}
+    result = { k: v for k, v in result.items() if re.search('^'+search, v[0], re.I) != None}
 
 # filter category.
 if 'category' in input_filter:
@@ -127,10 +127,20 @@ if 'category' in input_filter:
 if 'page' in input_filter:
     search = input_filter['page']
     elements_by_page = 10
-    i = 0
-    result_list = [ (k, v) for k, v in result.items() ]
+
+    result_list = list(result.items())
     result_list = result_list[elements_by_page * (search-1):elements_by_page * search]
     result = { e[0]: e[1] for e in result_list }
+
+## Correction (single line).
+#subset = [
+#    (key, item) for key, item in library.items()
+#    if (
+#        title == None or item[0].startswith(title)
+#    ) and (
+#        category == None or category in item[1]
+#    )
+#][offset: offset + 10]
 
 
 # print.

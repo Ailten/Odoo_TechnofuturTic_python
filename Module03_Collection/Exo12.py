@@ -1,5 +1,5 @@
 
-# insert friend
+# commun friend
 
 list_a = set(['a', 'b'])
 list_b = set(['b', 'c'])

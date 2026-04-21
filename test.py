@@ -1,3 +1,3 @@
-import re
 
-print(re.search('^a', 'cabc'))
+
+print('123456789'.ljust(5))
