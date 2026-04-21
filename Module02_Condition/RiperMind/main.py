@@ -5,7 +5,7 @@ amount_bomb = 10
 size_map_x = 15
 size_map_y = 10
 
-class Bombs():
+class RiperMind():
     bombs = []
 
 # print screen.
@@ -28,8 +28,7 @@ def printScreen():
 
 # generate bomb.
 def generateBomb():
-    print(Bombs.bombs)
-    Bombs.bombs = []
+    RiperMind.bombs = []
     i = 0
     while i < amount_bomb:
 
@@ -40,12 +39,12 @@ def generateBomb():
         if findInBombs(bomb):
             continue
 
-        Bombs.bombs.append(bomb)
+        RiperMind.bombs.append(bomb)
         i += 1
 
 # find bombs.
 def findInBombs(bomb) -> bool:
-    for b in Bombs.bombs:
+    for b in RiperMind.bombs:
         if b[0] == bomb[0] and b[1] == bomb[1]:
             return True
     return False
