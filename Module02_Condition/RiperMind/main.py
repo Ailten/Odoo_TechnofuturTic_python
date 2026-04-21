@@ -6,7 +6,7 @@ size_map_x = 15
 size_map_y = 10
 
 class Bombs():
-    bombs = []  # FIXME: need to be global variable (or static).
+    bombs = []
 
 # print screen.
 def printScreen():
@@ -23,14 +23,15 @@ def printScreen():
                 if count_bomb_adj > 0:
                     cel = str(count_bomb_adj)
 
-            str_line = f'{str_line}{cel}'
+            str_line += cel
         print(str_line)
 
 # generate bomb.
 def generateBomb():
+    print(Bombs.bombs)
     Bombs.bombs = []
     i = 0
-    while i >= amount_bomb:
+    while i < amount_bomb:
 
         x = int(random.random() * size_map_x)
         y = int(random.random() * size_map_y)
@@ -67,5 +68,3 @@ def countBombsAdj(pos) -> int:
 # execute.
 generateBomb()
 printScreen()
-
-print(Bombs.bombs)
