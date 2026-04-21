@@ -4,4 +4,3 @@ def my_func(*n: str) -> int:
 
 a = my_func
 print(a('a', 'b'))
-
