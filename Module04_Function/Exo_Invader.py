@@ -76,7 +76,7 @@ class Entity():
 # --- execution --->
 i = Invader()
 while True:
-    process = Process(target=i.update)
+    process = Process(target=i.update)  # FIXME: process life time has error.
     process.start()
     while process.is_alive():
         is_left = keyboard.is_pressed('q')
