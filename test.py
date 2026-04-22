@@ -1,3 +1,13 @@
 
+from functools import reduce
+print(
 
-print('123456789'.ljust(5))
+    reduce(lambda a, b : (
+        a | b
+    ), ( 
+        {
+            { (x, y) for y in range(0, 4)}
+        for x in range(0, 4) }
+    ))
+
+)
