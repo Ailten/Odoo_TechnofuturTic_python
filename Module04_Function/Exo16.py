@@ -1,9 +1,9 @@
 
 # validator purcentage.
 
-def verifyInUndred(num) -> bool:
-    if num <= 0 or num >= 100:
-        raise Exception('num out of range')
+def verifyInUndred(num: int) -> bool:
+    if num < 0 or num > 100:
+        raise ValueError('num out of range')
     return True
 
 print(verifyInUndred(10))
